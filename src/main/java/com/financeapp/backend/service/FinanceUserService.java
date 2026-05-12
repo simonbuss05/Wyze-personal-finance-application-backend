@@ -21,16 +21,16 @@ public class FinanceUserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-   public FinanceUser registerUser(String firstName, String lastName, String email, String password) throws Exception {
+   public FinanceUser registerUser(String email, String password, String firstName, String lastName) throws Exception {
         // checks if email already exists; throws exception if it does
         if (financeUserRepository.existsByEmail(email)) {
             throw new Exception("Email already exists");
         }
         // hashes password
-        password = passwordEncoder.encode(password);
+        String hashedPassword = passwordEncoder.encode(password);
 
         // creates new FinanceUser object with given parameters
-        FinanceUser financeUser = new FinanceUser(firstName, lastName, email, password);
+        FinanceUser financeUser = new FinanceUser(email, hashedPassword, firstName, lastName);
         // saves object into database
         financeUserRepository.save(financeUser);
         // returns object
@@ -52,7 +52,6 @@ public class FinanceUserService implements UserDetailsService {
         if (!financeUserRepository.existsByEmail(username)) {
             throw new UsernameNotFoundException(username);
         }
-        FinanceUser user = financeUserRepository.findByEmail(username);
-        return user;
+        return financeUserRepository.findByEmail(username);
     }
 }
