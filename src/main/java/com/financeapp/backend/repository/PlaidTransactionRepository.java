@@ -2,13 +2,47 @@ package com.financeapp.backend.repository;
 
 import com.financeapp.backend.entity.FinanceUser;
 import com.financeapp.backend.entity.PlaidTransaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PlaidTransactionRepository extends JpaRepository<PlaidTransaction, Long> {
     public List<PlaidTransaction> findAllByPlaidUser (FinanceUser financeUser);
 
     public PlaidTransaction findByPlaidTransactionId(String plaidTransactionId);
+
+    @Query(value = "SELECT * FROM plaid_transactions pt WHERE pt.user_id = :userId " +
+            "AND (:accountId IS NULL OR pt.account_id = :accountId) " +
+            "AND (:category IS NULL OR pt.category = :category) " +
+            "AND (:search IS NULL OR pt.merchant_name ILIKE CONCAT('%', :search, '%') " +
+            "OR pt.name ILIKE CONCAT('%', :search, '%')) " +
+            "AND (:from IS NULL OR pt.date >= CAST(:from AS DATE)) " +
+            "AND (:to IS NULL OR pt.date <= CAST(:to AS DATE)) " +
+            "ORDER BY pt.date DESC",
+            countQuery = "SELECT COUNT(*) FROM plaid_transactions pt WHERE pt.user_id = :userId " +
+                    "AND (:accountId IS NULL OR pt.account_id = :accountId) " +
+                    "AND (:category IS NULL OR pt.category = :category) " +
+                    "AND (:search IS NULL OR pt.merchant_name ILIKE CONCAT('%', :search, '%') " +
+                    "OR pt.name ILIKE CONCAT('%', :search, '%')) " +
+                    "AND (:from IS NULL OR pt.date >= CAST(:from AS DATE)) " +
+                    "AND (:to IS NULL OR pt.date <= CAST(:to AS DATE))",
+            nativeQuery = true)
+    Page<PlaidTransaction> findTransactionsForUser(
+            @Param("userId") Long userId,
+            @Param("accountId") Long accountId,
+            @Param("category") String category,
+            @Param("search") String search,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to,
+            Pageable pageable
+    );
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM PlaidTransaction t WHERE t.plaidUser = :user AND t.amount > 0 AND MONTH(t.date) = MONTH(CURRENT_DATE) AND YEAR(t.date) = YEAR(CURRENT_DATE)")
+    Double sumMonthlySpending(@Param("user") FinanceUser user);
 
 }

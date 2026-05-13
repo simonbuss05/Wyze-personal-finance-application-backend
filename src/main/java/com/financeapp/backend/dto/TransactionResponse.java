@@ -1,50 +1,27 @@
-package com.financeapp.backend.entity;
-
-import jakarta.persistence.*;
+package com.financeapp.backend.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-@Entity
-@Table(name="plaid_transactions")
-public class PlaidTransaction {
+public class TransactionResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name="account_id")
-    private PlaidAccount plaidAccount;
-
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private FinanceUser plaidUser;
-
     private String plaidTransactionId;
-
     private Double amount;
-
     private String merchantName;
-
     private String name;
-
     private String category;
-
     private LocalDate date;
-
     private boolean pending;
+    private String accountName;
+    private String accountMask;
+    private String institutionName;
 
-    private LocalDateTime createdAt;
+    public TransactionResponse() {
 
-    @PrePersist
-    public void onCreate() {
-        createdAt = LocalDateTime.now();
     }
 
-    public PlaidTransaction(PlaidAccount plaidAccount, FinanceUser plaidUser, String plaidTransactionId, Double amount, String merchantName, String name, String category, boolean pending, LocalDate date) {
-        this.plaidAccount = plaidAccount;
-        this.plaidUser = plaidUser;
+    public TransactionResponse(Long id, String plaidTransactionId, Double amount, String merchantName, String name, String category, LocalDate date, boolean pending, String accountName, String accountMask, String institutionName) {
+        this.id = id;
         this.plaidTransactionId = plaidTransactionId;
         this.amount = amount;
         this.merchantName = merchantName;
@@ -52,26 +29,17 @@ public class PlaidTransaction {
         this.category = category;
         this.date = date;
         this.pending = pending;
+        this.accountName = accountName;
+        this.accountMask = accountMask;
+        this.institutionName = institutionName;
     }
 
-    public PlaidTransaction() {
-
+    public Long getId() {
+        return id;
     }
 
-    public PlaidAccount getPlaidAccount() {
-        return plaidAccount;
-    }
-
-    public void setPlaidAccount(PlaidAccount plaidAccount) {
-        this.plaidAccount = plaidAccount;
-    }
-
-    public FinanceUser getPlaidUser() {
-        return plaidUser;
-    }
-
-    public void setPlaidUser(FinanceUser plaidUser) {
-        this.plaidUser = plaidUser;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPlaidTransactionId() {
@@ -130,20 +98,26 @@ public class PlaidTransaction {
         this.pending = pending;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public String getAccountName() {
+        return accountName;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getAccountMask() {
+        return accountMask;
     }
 
-    public Long getId() {
-        return id;
+    public void setAccountMask(String accountMask) {
+        this.accountMask = accountMask;
     }
 
+    public void setInstitutionName(String institutionName) {
+        this.institutionName = institutionName;
+    }
+    public String getInstitutionName() {
+        return institutionName;
+    }
 }
