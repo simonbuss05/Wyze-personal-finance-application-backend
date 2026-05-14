@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -62,5 +63,15 @@ public class UserController {
         } catch (Exception e){
             return ResponseEntity.status(500).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUserInfo() throws Exception {
+        FinanceUser financeUser = getCurrentUser();
+        Map<String, Object> response = new HashMap<>();
+        response.put("firstName", financeUser.getFirstName());
+        response.put("lastName", financeUser.getLastName());
+        response.put("email", financeUser.getEmail());
+        return ResponseEntity.ok(response);
     }
 }

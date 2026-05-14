@@ -11,6 +11,7 @@ import com.plaid.client.model.*;
 import com.plaid.client.request.PlaidApi;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import retrofit2.Response;
 
 import java.io.IOException;
@@ -207,6 +208,7 @@ public class PlaidService {
 
     }
 
+    @Transactional
     public void disconnectPlaidItem(Long itemId, FinanceUser financeUser) throws Exception {
         PlaidItem plaidItem = plaidItemRepository.findById(itemId).orElse(null);
         if (plaidItem == null) {

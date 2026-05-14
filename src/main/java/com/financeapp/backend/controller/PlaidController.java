@@ -1,8 +1,10 @@
 package com.financeapp.backend.controller;
 
 import com.financeapp.backend.dto.ExchangeTokenRequest;
+import com.financeapp.backend.dto.PlaidItemResponse;
 import com.financeapp.backend.entity.FinanceUser;
 import com.financeapp.backend.entity.PlaidItem;
+import com.financeapp.backend.repository.PlaidAccountRepository;
 import com.financeapp.backend.repository.PlaidItemRepository;
 import com.financeapp.backend.service.FinanceUserService;
 import com.financeapp.backend.service.PlaidService;
@@ -26,10 +28,13 @@ public class PlaidController {
 
     private PlaidItemRepository plaidItemRepository;
 
-    public PlaidController(PlaidService plaidService, FinanceUserService financeUserService,  PlaidItemRepository plaidItemRepository) {
+    private PlaidAccountRepository plaidAccountRepository;
+
+    public PlaidController(PlaidService plaidService, FinanceUserService financeUserService,  PlaidItemRepository plaidItemRepository, PlaidAccountRepository plaidAccountRepository) {
         this.plaidService = plaidService;
         this.financeUserService = financeUserService;
         this.plaidItemRepository = plaidItemRepository;
+        this.plaidAccountRepository = plaidAccountRepository;
     }
 
     private FinanceUser getCurrentUser() throws Exception{
@@ -68,6 +73,23 @@ public class PlaidController {
         } catch (Exception e) {
             return ResponseEntity.status(400).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/items")
+    public ResponseEntity<?> getItems() throws Exception {
+        FinanceUser user = getCurrentUser();
+        List<PlaidItem> items = plaidItemRepository.findAllByPlaidUser(user);
+        List<PlaidItemResponse> response = items.stream().map(item -> {
+            int accountCount = plaidAccountRepository.findAllByPlaidItem(item).size();
+            return new PlaidItemResponse(
+                    item.getId(),
+                    item.getInstitutionName(),
+                    item.getInstitutionId(),
+                    accountCount,
+                    item.getCreatedAt()
+            );
+        }).collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
 
