@@ -3,7 +3,7 @@
 A Spring Boot REST API that powers the Wyze personal finance dashboard. Integrates with the Plaid API to aggregate bank accounts and transactions across multiple financial institutions, with JWT-based authentication and automated nightly transaction syncing.
 
 **Live API:** `https://placeholder.railway.app`  
-**Frontend Repo:** [wyze-frontend](https://github.com/simonbuss05/wyze-persomal-finance-application-frontend)
+**Frontend Repo:** [wyze-frontend](https://github.com/simonbuss05/Wyze-personal-finance-application-frontend)
 
 ---
 
