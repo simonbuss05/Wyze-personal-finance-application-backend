@@ -1,6 +1,7 @@
 package com.financeapp.backend.repository;
 
 import com.financeapp.backend.entity.FinanceUser;
+import com.financeapp.backend.entity.PlaidAccount;
 import com.financeapp.backend.entity.PlaidTransaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,4 +49,7 @@ public interface PlaidTransactionRepository extends JpaRepository<PlaidTransacti
 
     @Query("SELECT DISTINCT t.category FROM PlaidTransaction t WHERE t.plaidUser = :user AND t.category IS NOT NULL ORDER BY t.category")
     List<String> findDistinctCategoriesByUser(@Param("user") FinanceUser user);
+
+    void deleteAllByPlaidAccountIn(List<PlaidAccount> accounts);
+
 }

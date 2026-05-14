@@ -15,6 +15,7 @@ import retrofit2.Response;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlaidService {
@@ -195,7 +196,33 @@ public class PlaidService {
     }
 
 
+    public void removeItem(PlaidItem plaidItem) throws Exception {
+        try {
+            ItemRemoveRequest removeItemRequest = new ItemRemoveRequest();
+            removeItemRequest.accessToken(plaidItem.getAccessToken());
+            plaidApi.itemRemove(removeItemRequest).execute();
+        } catch (Exception e) {
+            System.out.println("Failed to remove item");
+        }
 
+    }
+
+    public void disconnectPlaidItem(Long itemId, FinanceUser financeUser) throws Exception {
+        PlaidItem plaidItem = plaidItemRepository.findById(itemId).orElse(null);
+        if (plaidItem == null) {
+            throw new Exception("Item not found");
+        }
+        if (!plaidItem.getPlaidUser().getId().equals(financeUser.getId())) {
+            throw new Exception("Unauthorized");
+        }
+        removeItem(plaidItem);
+
+        List<PlaidAccount> plaidAccountsList = plaidAccountRepository.findAllByPlaidItem(plaidItem);
+        plaidTransactionRepository.deleteAllByPlaidAccountIn(plaidAccountsList);
+        plaidAccountRepository.deleteAll(plaidAccountsList);
+        plaidItemRepository.delete(plaidItem);
+
+    }
 
 
 

@@ -6,6 +6,7 @@ import com.financeapp.backend.entity.PlaidItem;
 import com.financeapp.backend.repository.PlaidItemRepository;
 import com.financeapp.backend.service.FinanceUserService;
 import com.financeapp.backend.service.PlaidService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,17 @@ public class PlaidController {
             return ResponseEntity.ok(Map.of("status", "success"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("items/{itemId}")
+    public ResponseEntity<?> deleteItem(@PathVariable Long itemId) throws Exception {
+        try {
+            FinanceUser financeUser = getCurrentUser();
+            plaidService.disconnectPlaidItem(itemId, financeUser);
+            return ResponseEntity.ok(Map.of("status", "success"));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 

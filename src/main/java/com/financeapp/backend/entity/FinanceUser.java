@@ -70,6 +70,10 @@ public class FinanceUser implements UserDetails {
         return createdAt;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
