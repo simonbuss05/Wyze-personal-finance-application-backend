@@ -2,6 +2,7 @@ package com.financeapp.backend.service;
 
 import com.financeapp.backend.dto.TransactionResponse;
 import com.financeapp.backend.entity.FinanceUser;
+import com.financeapp.backend.entity.PlaidAccount;
 import com.financeapp.backend.entity.PlaidTransaction;
 import com.financeapp.backend.repository.PlaidAccountRepository;
 import com.financeapp.backend.repository.PlaidTransactionRepository;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -39,10 +41,18 @@ public class TransactionService {
             response.setCategory(plaidTransaction.getCategory());
             response.setDate(plaidTransaction.getDate());
             response.setPending(plaidTransaction.isPending());
-            response.setAccountName(plaidTransaction.getPlaidAccount().getName());
+            PlaidAccount account = plaidTransaction.getPlaidAccount();
+            String displayName = (account.getNickname() != null && !account.getNickname().isEmpty())
+                    ? account.getNickname()
+                    : account.getName();
+            response.setAccountName(displayName);
             response.setAccountMask(plaidTransaction.getPlaidAccount().getMask());
             response.setInstitutionName(plaidTransaction.getPlaidAccount().getPlaidItem().getInstitutionName());
             return response;
         });
+    }
+
+    public List<String> getCategoriesForUser(FinanceUser user) {
+        return plaidTransactionRepository.findDistinctCategoriesByUser(user);
     }
 }

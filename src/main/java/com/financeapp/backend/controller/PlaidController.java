@@ -3,6 +3,7 @@ package com.financeapp.backend.controller;
 import com.financeapp.backend.dto.ExchangeTokenRequest;
 import com.financeapp.backend.entity.FinanceUser;
 import com.financeapp.backend.entity.PlaidItem;
+import com.financeapp.backend.repository.PlaidItemRepository;
 import com.financeapp.backend.service.FinanceUserService;
 import com.financeapp.backend.service.PlaidService;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -21,9 +23,12 @@ public class PlaidController {
 
     private FinanceUserService financeUserService;
 
-    public PlaidController(PlaidService plaidService, FinanceUserService financeUserService) {
+    private PlaidItemRepository plaidItemRepository;
+
+    public PlaidController(PlaidService plaidService, FinanceUserService financeUserService,  PlaidItemRepository plaidItemRepository) {
         this.plaidService = plaidService;
         this.financeUserService = financeUserService;
+        this.plaidItemRepository = plaidItemRepository;
     }
 
     private FinanceUser getCurrentUser() throws Exception{
@@ -53,7 +58,5 @@ public class PlaidController {
         }
     }
 
-
-    //all controller methods work and database pulled sandbox data :)
 
 }

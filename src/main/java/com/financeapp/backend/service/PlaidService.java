@@ -171,7 +171,9 @@ public class PlaidService {
                     plaidTransaction.setAmount(transaction.getAmount());
                     plaidTransaction.setMerchantName(transaction.getMerchantName());
                     plaidTransaction.setName(transaction.getName());
-                    if (transaction.getCategory() != null && !transaction.getCategory().isEmpty()) {
+                    if (transaction.getPersonalFinanceCategory() != null) {
+                        plaidTransaction.setCategory(transaction.getPersonalFinanceCategory().getPrimary());
+                    } else if (transaction.getCategory() != null && !transaction.getCategory().isEmpty()) {
                         plaidTransaction.setCategory(transaction.getCategory().get(0));
                     }
                     plaidTransaction.setDate(transaction.getDate());

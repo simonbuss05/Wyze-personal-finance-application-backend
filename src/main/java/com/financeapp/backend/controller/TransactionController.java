@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -58,5 +59,12 @@ public class TransactionController {
         FinanceUser financeUser = (FinanceUser) financeUserService.loadUserByUsername(email);
 
         return financeUser;
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<?> getCategories() throws Exception {
+        FinanceUser user = getCurrentUser();
+        List<String> categories = transactionService.getCategoriesForUser(user);
+        return ResponseEntity.ok(categories);
     }
 }

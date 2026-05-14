@@ -45,4 +45,7 @@ public interface PlaidTransactionRepository extends JpaRepository<PlaidTransacti
     @Query("SELECT COALESCE(SUM(t.amount), 0) FROM PlaidTransaction t WHERE t.plaidUser = :user AND t.amount > 0 AND MONTH(t.date) = MONTH(CURRENT_DATE) AND YEAR(t.date) = YEAR(CURRENT_DATE)")
     Double sumMonthlySpending(@Param("user") FinanceUser user);
 
+
+    @Query("SELECT DISTINCT t.category FROM PlaidTransaction t WHERE t.plaidUser = :user AND t.category IS NOT NULL ORDER BY t.category")
+    List<String> findDistinctCategoriesByUser(@Param("user") FinanceUser user);
 }

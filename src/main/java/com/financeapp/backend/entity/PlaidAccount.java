@@ -1,5 +1,6 @@
 package com.financeapp.backend.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -40,7 +41,10 @@ public class PlaidAccount {
 
     private LocalDateTime updatedAt;
 
-    public PlaidAccount(PlaidItem plaidItem, FinanceUser user, String plaidAccountId, String name, String officialName, String type, String subtype, String mask, Double currentBalance, Double availableBalance, String currencyCode) {
+    @Nullable
+    private String nickname;
+
+    public PlaidAccount(PlaidItem plaidItem, FinanceUser user, String plaidAccountId, String name, String officialName, String type, String subtype, String mask, Double currentBalance, Double availableBalance, String currencyCode, String nickname) {
         this.plaidItem = plaidItem;
         this.user = user;
         this.plaidAccountId = plaidAccountId;
@@ -53,6 +57,7 @@ public class PlaidAccount {
         this.availableBalance = availableBalance;
         this.currencyCode = currencyCode;
         this.updatedAt = LocalDateTime.now();
+        this.nickname = nickname;
     }
     public PlaidAccount() {
 
@@ -160,5 +165,12 @@ public class PlaidAccount {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

@@ -39,5 +39,4 @@ public class DashboardController {
         return financeUser;
     }
 
-    //dashboard shows all info on frontend :)
 }

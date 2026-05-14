@@ -12,8 +12,9 @@ public class AccountResponse {
     private Double availableBalance;
     private String currencyCode;
     private String institutionName;
+    private String nickname;
 
-    public AccountResponse(Long id, String plaidAccountId, String name, String officialName, String type, String subtype, String mask, Double currentBalance, Double availableBalance, String currencyCode, String institutionName) {
+    public AccountResponse(Long id, String plaidAccountId, String name, String officialName, String type, String subtype, String mask, Double currentBalance, Double availableBalance, String currencyCode, String institutionName, String nickname) {
         this.id = id;
         this.plaidAccountId = plaidAccountId;
         this.name = name;
@@ -25,6 +26,7 @@ public class AccountResponse {
         this.availableBalance = availableBalance;
         this.currencyCode = currencyCode;
         this.institutionName = institutionName;
+        this.nickname = nickname;
     }
 
     public AccountResponse() {
@@ -117,5 +119,12 @@ public class AccountResponse {
 
     public void setInstitutionName(String institutionName) {
         this.institutionName = institutionName;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
