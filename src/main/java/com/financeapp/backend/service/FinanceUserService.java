@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -96,6 +97,7 @@ public class FinanceUserService implements UserDetailsService {
         return financeUser;
     }
 
+    @Transactional
     public void deleteAccount(FinanceUser financeUser) throws Exception {
         List<PlaidItem> plaidItemList = plaidItemRepository.findAllByPlaidUser(financeUser);
         for (PlaidItem plaidItem : plaidItemList) {
