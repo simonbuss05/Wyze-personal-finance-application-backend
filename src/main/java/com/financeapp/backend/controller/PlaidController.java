@@ -92,5 +92,14 @@ public class PlaidController {
         return ResponseEntity.ok(response);
     }
 
-
+    @PostMapping("/sync-all")
+    public ResponseEntity<?> syncAll() throws Exception {
+        FinanceUser user = getCurrentUser();
+        List<PlaidItem> items = plaidItemRepository.findAllByPlaidUser(user);
+        for (PlaidItem item : items) {
+            plaidService.syncTransactions(item);
+        }
+        return ResponseEntity.ok(Map.of("status", "sync complete"));
+    }
+    
 }

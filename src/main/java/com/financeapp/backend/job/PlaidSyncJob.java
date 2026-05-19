@@ -7,7 +7,6 @@ import com.financeapp.backend.service.PlaidService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -21,7 +20,7 @@ public class PlaidSyncJob {
         this.plaidItemRepository = plaidItemRepository;
     }
 
-    @Scheduled(cron = "0 0 2 * * *")
+    @Scheduled(fixedRate = 60000)
     public void syncAllTransactions() {
         List<PlaidItem> plaidItems = plaidItemRepository.findAll();
         for (PlaidItem plaidItem : plaidItems) {
