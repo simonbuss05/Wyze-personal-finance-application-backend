@@ -52,4 +52,38 @@ public interface PlaidTransactionRepository extends JpaRepository<PlaidTransacti
 
     void deleteAllByPlaidAccountIn(List<PlaidAccount> accounts);
 
+    @Query(value = "SELECT TO_CHAR(DATE_TRUNC('month', t.date), 'Mon YYYY') as month, " +
+            "COALESCE(SUM(t.amount), 0) as total " +
+            "FROM plaid_transactions t " +
+            "WHERE t.user_id = :userId " +
+            "AND t.amount > 0 " +
+            "AND t.date >= :startDate " +
+            "GROUP BY DATE_TRUNC('month', t.date) " +
+            "ORDER BY DATE_TRUNC('month', t.date) ASC",
+            nativeQuery = true)
+    List<Object[]> getMonthlySpending(@Param("userId") Long userId, @Param("startDate") LocalDate startDate);
+
+    @Query(value = "SELECT t.category, COALESCE(SUM(t.amount), 0) as total " +
+            "FROM plaid_transactions t " +
+            "WHERE t.user_id = :userId " +
+            "AND t.amount > 0 " +
+            "AND t.category IS NOT NULL " +
+            "AND DATE_TRUNC('month', t.date) = DATE_TRUNC('month', CURRENT_DATE) " +
+            "GROUP BY t.category " +
+            "ORDER BY total DESC",
+            nativeQuery = true)
+    List<Object[]> getCategoryBreakdown(@Param("userId") Long userId);
+
+    @Query(value = "SELECT t.merchant_name, t.name, t.amount FROM plaid_transactions t " +
+            "WHERE t.user_id = :userId AND t.amount > 0 " +
+            "AND DATE_TRUNC('month', t.date) = DATE_TRUNC('month', CURRENT_DATE) " +
+            "ORDER BY t.amount DESC LIMIT 1", nativeQuery = true)
+    Object[] getBiggestTransactionThisMonth(@Param("userId") Long userId);
+
+    @Query(value = "SELECT COALESCE(SUM(t.amount), 0) FROM plaid_transactions t " +
+            "WHERE t.user_id = :userId AND t.amount > 0 " +
+            "AND t.date >= :startDate AND t.date <= :endDate",
+            nativeQuery = true)
+    Double sumSpendingBetweenDates(@Param("userId") Long userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
 }

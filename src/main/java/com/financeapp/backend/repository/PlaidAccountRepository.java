@@ -24,4 +24,7 @@ public interface PlaidAccountRepository extends JpaRepository<PlaidAccount, Long
 
     List<PlaidAccount> findAllByPlaidItem(PlaidItem plaidItem);
 
+    @Query("SELECT a FROM PlaidAccount a WHERE a.user = :user AND a.type = 'depository' ORDER BY a.currentBalance DESC")
+    List<PlaidAccount> findAccountsByBalanceDesc(@Param("user") FinanceUser user);
+
 }
