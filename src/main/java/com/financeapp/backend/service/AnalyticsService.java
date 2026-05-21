@@ -21,7 +21,7 @@ public class AnalyticsService {
     }
 
     public List<Map<String, Object>> getMonthlySpending(FinanceUser financeUser, int months) {
-        LocalDate startDate = LocalDate.now().minusMonths(months - 11).withDayOfMonth(1);
+        LocalDate startDate = LocalDate.now().minusMonths(months - 1).withDayOfMonth(1);
         List<Object[]> results = plaidTransactionRepository.getMonthlySpending(financeUser.getId(), startDate);
 
         List<Map<String, Object>> monthlySpending = new ArrayList<>();
