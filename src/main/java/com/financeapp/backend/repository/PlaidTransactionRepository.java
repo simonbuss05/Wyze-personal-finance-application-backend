@@ -38,8 +38,8 @@ public interface PlaidTransactionRepository extends JpaRepository<PlaidTransacti
             @Param("accountId") Long accountId,
             @Param("category") String category,
             @Param("search") String search,
-            @Param("from") LocalDate from,
-            @Param("to") LocalDate to,
+            @Param("from") String from,
+            @Param("to") String to,
             Pageable pageable
     );
 
@@ -85,5 +85,7 @@ public interface PlaidTransactionRepository extends JpaRepository<PlaidTransacti
             "AND t.date >= :startDate AND t.date <= :endDate",
             nativeQuery = true)
     Double sumSpendingBetweenDates(@Param("userId") Long userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+
 
 }

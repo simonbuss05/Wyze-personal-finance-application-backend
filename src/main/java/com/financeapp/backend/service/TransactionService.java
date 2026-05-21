@@ -29,7 +29,7 @@ public class TransactionService {
         PageRequest pageRequest = PageRequest.of(page, size);
 
         Page<PlaidTransaction> plaidTransactions = plaidTransactionRepository
-                .findTransactionsForUser(financeUser.getId(), accountId, category, search, from, to, pageRequest);
+                .findTransactionsForUser(financeUser.getId(), accountId, category, search, from != null ? from.toString() : null, to != null ? to.toString() : null, pageRequest);
 
         return plaidTransactions.map(plaidTransaction -> {
             TransactionResponse response = new TransactionResponse();

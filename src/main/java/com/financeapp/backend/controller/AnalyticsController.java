@@ -6,10 +6,7 @@ import com.financeapp.backend.service.AnalyticsService;
 import com.financeapp.backend.service.FinanceUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,9 +25,9 @@ public class AnalyticsController {
     }
 
     @GetMapping("/monthly-spending")
-    public ResponseEntity<?> monthlySpending() throws Exception {
+    public ResponseEntity<?> monthlySpending(@RequestParam(defaultValue = "12") int months) throws Exception {
         FinanceUser financeUser = getCurrentUser();
-        List<Map<String, Object>> result = analyticsService.getMonthlySpending(financeUser);
+        List<Map<String, Object>> result = analyticsService.getMonthlySpending(financeUser, months);
         return ResponseEntity.ok(result);
     }
 
